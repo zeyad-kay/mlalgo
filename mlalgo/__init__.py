@@ -1,2 +1,2 @@
 from .DecisionTreeClassifier import DecisionTreeClassifier
-# from .LinearRegression import LinearRegression
+from .LinearRegression import LinearRegression
