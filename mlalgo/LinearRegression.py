@@ -4,7 +4,6 @@ class LinearRegression:
     def __init__(self, iterations=100000, alpha=0.01):
         self.iterations = iterations
         self.alpha = alpha
-        self._norm_coef = 1
     
     def fit(self, X, Y):
         if X.shape[0] != Y.shape[0]:
