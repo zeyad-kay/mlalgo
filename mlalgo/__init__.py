@@ -1,2 +1,3 @@
 from .DecisionTreeClassifier import DecisionTreeClassifier
 from .LinearRegression import LinearRegression
+from .SGDClassifier import SGDClassifier
