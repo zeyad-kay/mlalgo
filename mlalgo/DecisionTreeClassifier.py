@@ -1,5 +1,6 @@
 from math import log
 import numpy as np
+from collections import deque
 
 class Node:
     def __init__(self,criterion: str,labels: dict, impurity: float, feature: int=None,threshold=None,left=None,right=None) -> None:
@@ -51,7 +52,6 @@ class DecisionTreeClassifier:
         else:
             raise ValueError(f"min_samples must be greater than or equal zero.")
 
-
         if criterion == "gini" or criterion == "entropy":
             self.criterion = criterion
         else:
@@ -84,7 +84,7 @@ class DecisionTreeClassifier:
         lbls = self.__ylabels(Y[X[:,feature] != threshold])
         self._root.right = Node(self.criterion, labels=lbls, impurity=self.__impurity(lbls))
 
-        q = []
+        q = deque()
         q.append({ "node": self._root.left, "X": X[X[:,feature] == threshold], "Y": Y[X[:,feature] == threshold] })
         q.append({ "node": self._root.right, "X": X[X[:,feature] != threshold], "Y": Y[X[:,feature] != threshold] })
         while len(q) != 0:
@@ -115,7 +115,8 @@ class DecisionTreeClassifier:
         return self
 
     def depth(self):
-        q = [self._root]
+        q = deque()
+        q.append(self._root)
         height = 0 
         while(True):
             nodeCount = len(q)
@@ -124,8 +125,7 @@ class DecisionTreeClassifier:
 
             height += 1 
             while(nodeCount > 0):
-                node = q[0]
-                q.pop(0)
+                node = q.popleft()
                 if node.left is not None:
                     q.append(node.left)
                 if node.right is not None:
@@ -133,7 +133,8 @@ class DecisionTreeClassifier:
                 nodeCount -= 1
     
     def __node_depth(self, target_node):
-        q = [(self._root,0)]
+        q = deque()
+        q.append((self._root,0))
         while len(q) != 0:
             node,d = q.pop()
             if node is target_node:
