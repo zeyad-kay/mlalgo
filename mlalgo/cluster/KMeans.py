@@ -49,7 +49,7 @@ class KMeans():
 
             centers, inertia, labels = self.__update(X, centers)
 
-            if np.array_equal(labels, old_labels) or np.allclose(old_centers,centers,rtol=self.tolerance,atol=0):
+            if np.array_equal(labels, old_labels) and np.allclose(old_centers,centers,rtol=self.tolerance,atol=0):
                 if self.verbose:
                     print(f"converged at iteration #{i+1}")
                 break
