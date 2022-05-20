@@ -3,7 +3,7 @@ import numpy as np
 from collections import deque
 
 class Node:
-    def __init__(self,criterion: str,labels: dict, impurity: float, feature: int=None,threshold=None,left=None,right=None) -> None:
+    def __init__(self,criterion: str,labels: dict, impurity: float, feature: int|None=None,threshold=None,left=None,right=None) -> None:
         self.left = left
         self.right = right
         self.impurity = impurity
@@ -25,37 +25,35 @@ class Node:
             return f"X[{self.feature}]={self.threshold}, {self.criterion}={self.impurity}, Labels={self.labels}"
 
 class DecisionTreeClassifier:
-    def __init__(self, max_depth:int=None, min_samples:int=1, criterion:str="gini"):
+    def __init__(self, max_depth:int|None=None, min_samples:int=1, criterion:str="gini"):
         self._root = None
-        self.max_depth = None
-        self.__check_params(criterion, max_depth, min_samples)
+        self.max_depth = max_depth
+        self.min_samples = min_samples
+        self.criterion = criterion
 
     def fit(self, X, Y):
+        self.__check_params()
         return self.__build_tree(X, Y)
     
     def predict(self, X):
-        return np.array([self.__traverse(self._root, x) for x in X])
-    
+        if self._root:
+            return np.array([self.__traverse(self._root, x) for x in X])
+        else:
+            raise Exception("Tree has no root. Fit the model first.")
+
     def score(self, X, Y):
         ps = self.predict(X)
         return ps[ps == Y].shape[0] / ps.shape[0]
     
-    def __check_params(self, criterion:str, max_depth: int, min_samples: int):
-        if max_depth:
-            if max_depth >= 1:
-                self.max_depth = max_depth
-            else:
-                raise ValueError(f"max_depth must be greater than zero.")
+    def __check_params(self):
+        if not self.max_depth or self.max_depth < 0:
+            raise ValueError(f"max_depth must be greater than zero.")
 
-        if min_samples >= 0:
-            self.min_samples = min_samples
-        else:
+        if self.min_samples < 0:
             raise ValueError(f"min_samples must be greater than or equal zero.")
 
-        if criterion == "gini" or criterion == "entropy":
-            self.criterion = criterion
-        else:
-            raise ValueError(f"{criterion} is not a valid criterion.")
+        if self.criterion not in ["gini", "entropy"]:
+            raise ValueError(f"{self.criterion} is not a valid criterion.")
 
     def __traverse(self, node: Node, x):
         if node.isLeaf():

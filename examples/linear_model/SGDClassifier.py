@@ -42,7 +42,7 @@ def main():
             plot_models(custom, skl, xtrn, ytrn, lbls[lc[0]],lbls[lc[1]], xlabel=cols[c[0]], ylabel=cols[c[1]])
             print(f"\tx1={cols[c[0]]}, x2={cols[c[1]]}:")
             print(f"\t\tsklearn accuracy: {skl.score(xtst, ytst)}")
-            print(f"\t\tmy accuracy: {custom.score(xtst, ytst)}")
+            print(f"\t\tmlalgo accuracy: {custom.score(xtst, ytst)}")
 
 def get_classifiers(x, y):
     # implementation
@@ -61,7 +61,7 @@ def plot_models(clf, skclf, x ,y, lbl0, lbl1 ,xlabel, ylabel):
 
     plt.scatter(x[y==-1][:,0], x[y==-1][:,1] ,c="red", label=lbl0)
     plt.scatter(x[y==1][:,0], x[y==1][:,1] ,c="green", label=lbl1)
-    plt.legend(["My Model","sklearn", lbl0, lbl1])
+    plt.legend(["mlalgo","sklearn", lbl0, lbl1])
     plt.xlabel(f"{xlabel}")
     plt.ylabel(f"{ylabel}")
     plt.show()
