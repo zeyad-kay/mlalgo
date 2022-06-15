@@ -15,33 +15,30 @@ def main():
     # mlalgo
     ms = KMeans(5).fit(X)
     cluster_centers = ms.centers
-    print("Score: ", ms.score(np.array([[2,1.5],[4.5,4]])))
-    print("Inertia: ", ms.inertia)
-    
+    print("mlalgo:")
+    print("\tscore: ", round(ms.score(np.array([[2,1.5],[4.5,4]])),2))
+    print("\tinertia: ", round(ms.inertia,1))
+    print("----------------------------")
     # Finally We plot the data points and centroids
-    fig = plt.figure()
+    fig, axs = plt.subplots(1,2)
 
-    ax = fig.add_subplot(111)
-
-    ax.scatter(X[:, 0], X[:, 1],marker ='o',c=ms.labels)
-    ax.scatter(cluster_centers[:, 0], cluster_centers[:, 1], marker ='x', color ='red',
+    axs[0].scatter(X[:, 0], X[:, 1],marker ='o',c=ms.labels)
+    axs[0].scatter(cluster_centers[:, 0], cluster_centers[:, 1], marker ='x', color ='red',
     		s = 300, linewidth = 5, zorder = 1)
-
-    plt.show()
+    axs[0].set_title("mlalgo")
     
     # sklearn
     ms = KM(5,init="random").fit(X)
     cluster_centers = ms.cluster_centers_
-    print("Score: ", ms.score(np.array([[2,1.5],[4.5,4]])))
-    print("Inertia: ", ms.inertia_)
+    
+    print("sklearn:")
+    print("\tscore: ", round(ms.score(np.array([[2,1.5],[4.5,4]])),2))
+    print("\tinertia: ", round(ms.inertia_,1))
 
-    fig = plt.figure()
-
-    ax = fig.add_subplot(111)
-
-    ax.scatter(X[:, 0], X[:, 1],marker ='o',c=ms.labels_)
-    ax.scatter(cluster_centers[:, 0], cluster_centers[:, 1], marker ='x', color ='red',
+    axs[1].scatter(X[:, 0], X[:, 1],marker ='o',c=ms.labels_)
+    axs[1].scatter(cluster_centers[:, 0], cluster_centers[:, 1], marker ='x', color ='red',
     		s = 300, linewidth = 5, zorder = 1)
+    axs[1].set_title("sklearn")
 
     plt.show()
 
