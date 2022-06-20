@@ -31,12 +31,15 @@ class KMeans():
             raise ValueError("max_iter must be greater than or equal 1")
         if self.initial_centers is not None and not isinstance(self.initial_centers, np.ndarray):
             raise ValueError("initial_centers must be None or ndarray")
-    
+        if isinstance(self.initial_centers, np.ndarray):
+            self.initial_centers = self.initial_centers.astype(np.float)
+            self.n_init = 1
+
     def fit(self, X: np.ndarray):
         self.__check_params()
         
         best_labels = np.ndarray((X.shape[0],))
-        best_centers = np.ndarray((self.K, X.shape[1]))
+        best_centers = np.ndarray((self.K, X.shape[1]),dtype=np.float)
         best_inertia = np.inf
 
         # run kmeans n_init times with different centers and
@@ -111,12 +114,12 @@ class KMeans():
 
     def __init_centers(self, X):
         # check if user supplied initial centers
-        if self.initial_centers and self.initial_centers.shape != (self.K, X.shape[1]):
+        if isinstance(self.initial_centers, np.ndarray) and self.initial_centers.shape != (self.K, X.shape[1]):
             raise ValueError(f"Expected shape({self.K}, {X.shape[1]}), found {self.initial_centers.shape}") 
         
         inertia = np.inf
         centers = None
-        if self.initial_centers:
+        if isinstance(self.initial_centers, np.ndarray):
             centers = self.initial_centers
         else:
             # initialize random centers from the observations
@@ -126,5 +129,3 @@ class KMeans():
             [print(f"initial centroid {i+1}: {k}") for i,k in enumerate(centers)]
 
         return centers, inertia
-
-KMeans()
